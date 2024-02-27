@@ -48,13 +48,13 @@ async def summarize(description, points_words, Summary_type, importance, exclude
 
 def lambda_handler(event, context):
     # Attempt to extract the token from the Authorization header
-    token = event.get('headers', {}).get('Authorization')
-    if not token or not verify_token(token):  # verify_token should return False if the token is invalid
-        return {
-            "statusCode": 401,
-            "body": json.dumps({"error": "Unauthorized. Invalid or missing token."})
-        }
-    # Parse input data from event
+    auth_header = event.get('headers', {}).get('authorization', '')
+    token = auth_header.split(' ')[1] if auth_header.startswith('Bearer ') else None
+
+    if not token or not verify_token(token):
+        return {"statusCode": 401, "body": json.dumps({"error": "Unauthorized. Invalid or missing token."})}
+    # Parse input data from eventcd..
+    
     try:
         data = event.get('body')  # Assuming event['body'] contains the input JSON as a string
         if isinstance(data, str):

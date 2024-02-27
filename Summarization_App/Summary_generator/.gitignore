@@ -1,3 +1,2 @@
 # to ignore environment-specific files
 .env
-input_handling/
